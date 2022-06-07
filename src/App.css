@@ -345,6 +345,25 @@ input:focus {
   border: none;
 }
 
+.account-info {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid #dee2e6; 
+  border-right: 1px solid #dee2e6;
+  font-size: 80%
+}
+
+.account-info > span {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.25rem;
+  flex-direction: column;
+ word-wrap: break-word;
+}
 
 /* Media Queries */
 

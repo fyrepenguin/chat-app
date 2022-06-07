@@ -1,6 +1,7 @@
 import React, { useContext, useState, useCallback } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useContacts } from './ContactsProvider';
+import { useAuth } from './AuthProvider';
 
 
 const ChatsContext = React.createContext()
@@ -9,8 +10,9 @@ export function useChats() {
   return useContext(ChatsContext)
 }
 
-export function ChatsProvider({ email, children }) {
-  const [chats, setChats] = useLocalStorage('chats', [])
+export function ChatsProvider({ children }) {
+  const [chats, setChats] = useLocalStorage('chats', []);
+  const auth = useAuth();
   const [selectedChatIndex, setSelectedChatIndex] = useState(0)
   const { contacts } = useContacts()
 
@@ -53,7 +55,7 @@ export function ChatsProvider({ email, children }) {
   }, [setChats])
 
   function sendMessage(recipients, text) {
-    addMessageToChat({ recipients, text, sender: email })
+    addMessageToChat({ recipients, text, sender: auth.email })
   }
 
   const formattedChats = chats.map((chat, index) => {
@@ -70,7 +72,7 @@ export function ChatsProvider({ email, children }) {
         return contact.email === message.sender
       })
       const name = (contact && contact.firstName) || message.sender
-      const fromMe = email === message.sender
+      const fromMe = auth.email === message.sender
       return { ...message, senderName: name, fromMe }
     })
 

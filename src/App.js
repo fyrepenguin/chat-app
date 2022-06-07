@@ -1,27 +1,39 @@
 import React from 'react'
+import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthProvider'
 import Login from './components/Login'
-import useLocalStorage from './hooks/useLocalStorage';
 import Dashboard from './components/Dashboard'
 import { ContactsProvider } from './contexts/ContactsProvider'
 import { ChatsProvider } from './contexts/ChatsProvider';
+import Layout from './components/Layout';
+import RequireAuth from './components/RequireAuth';
+import NotFound from './components/NotFound';
 import './App.css'
 
 function App() {
-  const [email, setEmail] = useLocalStorage('email', null)
+  return (<AuthProvider>
+    <div>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <ContactsProvider >
+                  <ChatsProvider >
+                    <Dashboard />
+                  </ChatsProvider>
+                </ContactsProvider>
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Route>
 
-  const dashboard = (
-    <>
-      <ContactsProvider email={email}>
-        <ChatsProvider email={email}>
-          <Dashboard email={email} />
-        </ChatsProvider>
-      </ContactsProvider>
-    </>
-  )
-
-  return (
-    email ? dashboard : <Login onEmailSubmit={setEmail} />
-  )
+      </Routes>
+    </div>
+  </AuthProvider>)
 }
 
 export default App;

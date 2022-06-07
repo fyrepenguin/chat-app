@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useAuth } from './AuthProvider';
 
 const ContactsContext = React.createContext()
 
@@ -7,8 +8,9 @@ export function useContacts() {
   return useContext(ContactsContext)
 }
 
-export function ContactsProvider({ children, email }) {
-  const [contacts, setContacts] = useLocalStorage('contacts', [{ firstName: 'You', email }])
+export function ContactsProvider({ children }) {
+  const auth = useAuth()
+  const [contacts, setContacts] = useLocalStorage('contacts', [{ firstName: 'You', email: auth.email }])
 
   function createContact({ email, firstName, lastName, phoneNumber }) {
     setContacts(prevContacts => {

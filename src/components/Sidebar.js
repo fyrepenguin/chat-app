@@ -3,11 +3,15 @@ import Chats from './Chats'
 import Contacts from './Contacts'
 import NewContactModal from './NewContactModal'
 import NewChatModal from './NewChatModal'
+import { useAuth } from '../contexts/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const CHATS_KEY = 'chats'
 const CONTACTS_KEY = 'contacts'
 
 export default function Sidebar({ email }) {
+  let auth = useAuth();
+  let navigate = useNavigate();
   const [activeKey, setActiveKey] = useState(CHATS_KEY)
   const [modalOpen, setModalOpen] = useState(false)
   const chatsOpen = activeKey === CHATS_KEY
@@ -40,8 +44,16 @@ export default function Sidebar({ email }) {
           <Contacts />
         </div>}
       </div>
-      <div style={{ padding: '0.5rem', borderTop: '1px solid #dee2e6', borderRight: '1px solid #dee2e6', fontSize: '80%' }}>
-        Your Email: <span style={{ color: '#6c757d' }}>{email}</span>
+      <div className="account-info">
+        <span>
+          Your Email: <span style={{ color: '#6c757d', wordBreak: 'break-all' }}>{email}</span>
+        </span>   <button
+          onClick={() => {
+            auth.logout(() => navigate("/login"));
+          }}
+        >
+          logout
+        </button>
       </div>
       <button onClick={() => setModalOpen(true)} className="modal-opener" style={{ borderRadius: 'none' }}>
         New {chatsOpen ? 'Chat' : 'Contact'}
