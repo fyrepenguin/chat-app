@@ -23,11 +23,11 @@ export function ContactsProvider({ children }) {
     })
   }
 
-  function updateContact(email, name) {
+  function updateContact(email, firstName, lastName, phoneNumber) {
     setContacts(prevContacts => {
       return prevContacts.map(contact => {
         if (contact.email === email) {
-          return { ...contact, name }
+          return { ...contact, firstName, lastName, phoneNumber }
         }
         return contact
       })

@@ -17,7 +17,9 @@ export function ChatsProvider({ children }) {
   const { contacts } = useContacts()
 
   function createChat(recipients) {
-    setChats(prevChats => {
+    const chatAlreadyExists = chats.map(chat => arrayEquality(recipients, chat.recipients)).includes(true)
+
+    !chatAlreadyExists && setChats(prevChats => {
       return [...prevChats, { recipients, messages: [] }]
     })
   }
@@ -63,17 +65,17 @@ export function ChatsProvider({ children }) {
       const contact = contacts.find(contact => {
         return contact.email === recipient
       })
-      const name = (contact && contact.firstName) || recipient
-      return { email: recipient, name }
+      const firstName = (contact && contact.firstName) || recipient
+      return { email: recipient, firstName }
     })
 
     const messages = chat.messages.map(message => {
       const contact = contacts.find(contact => {
         return contact.email === message.sender
       })
-      const name = (contact && contact.firstName) || message.sender
+      const firstName = (contact && contact.firstName) || message.sender
       const fromMe = auth.email === message.sender
-      return { ...message, senderName: name, fromMe }
+      return { ...message, senderName: firstName, fromMe }
     })
 
     const selected = index === selectedChatIndex

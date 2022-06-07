@@ -10,8 +10,11 @@ export default function NewChatModal({ closeModal }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-
-    createChat(selectedContactEmails)
+    if (selectedContactEmails.length > 0) {
+      createChat(selectedContactEmails)
+      setSelectedContactEmails([])
+    }
+    e.target.reset()
     closeModal()
   }
 
@@ -36,18 +39,19 @@ export default function NewChatModal({ closeModal }) {
           <form onSubmit={handleSubmit} className='modal-form'>
             {contacts.map(contact => (
               <div controlId={contact.email} key={contact.email} className="form-group form-checkbox">
-                <input
+                <label htmlFor={contact.email}> <input
                   name="contact"
                   type="checkbox"
-                  value={selectedContactEmails.includes(contact.email)}
+                  id={contact.email}
+                  checked={selectedContactEmails.includes(contact.email)}
                   label={contact.firstName}
                   onChange={() => handleCheckboxChange(contact.email)}
                 />
-                <label htmlFor="contact">{contact.firstName}</label>
+                  {contact.firstName}</label>
               </div>
             ))}
             <footer>
-              <button className="primary" onClick={handleSubmit}>Create Contact</button>
+              <button className="primary" type="submit">Create Contact</button>
               <button className="secondary" onClick={closeModal}>Cancel</button>
             </footer>
           </form>
